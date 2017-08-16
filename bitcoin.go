@@ -1,4 +1,4 @@
-package mf
+package msc
 
 // Source: https://forum.minergate.com/viewtopic.php?f=9&t=1987
 

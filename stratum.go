@@ -1,4 +1,4 @@
-package mf
+package msc
 
 import (
 	"bufio"

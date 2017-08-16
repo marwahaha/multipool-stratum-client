@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	mf "github.com/lerenn/mining-feeder"
+	msc "github.com/lerenn/multipool-stratum-client"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	username := "louis.fradin@gmail.com"
 	password := "x"
 
-	pool := mf.BitcoinStratumPool{}
+	pool := msc.BitcoinStratumPool{}
 	if err := pool.Connect(addr, port); err != nil {
 		panic(err)
 	}
