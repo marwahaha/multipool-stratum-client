@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	// port := 3336
-	// addr := "ltc.pool.minergate.com"
 	port := 45560
 	addr := "xmr.pool.minergate.com"
 	username := "louis.fradin@gmail.com"
@@ -24,5 +22,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(res)
+	fmt.Println("---")
+	fmt.Println("JOB:", res)
 }

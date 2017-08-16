@@ -22,5 +22,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(res)
+	fmt.Println("---")
+	fmt.Println("JOB:", res)
 }

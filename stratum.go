@@ -18,7 +18,7 @@ type StratumPool struct {
 
 // RequestInterface is an interface for requests
 type RequestInterface interface {
-	SetID(id int)
+	setID(id int)
 }
 
 // ResponseInterface is an interface for responses
@@ -41,7 +41,7 @@ func (sp *StratumPool) Connect(addr string, port int) error {
 func (sp *StratumPool) send(req RequestInterface) error {
 	// Set ID
 	sp.idCount++
-	req.SetID(sp.idCount)
+	req.setID(sp.idCount)
 
 	// Transform to text
 	bytes, err := json.Marshal(req)
@@ -57,17 +57,15 @@ func (sp *StratumPool) send(req RequestInterface) error {
 	return nil
 }
 
-func (sp *StratumPool) receive() (ResponseInterface, error) {
-	var r ResponseInterface
-
+func (sp *StratumPool) receive(resp ResponseInterface) error {
 	// Get response
 	txt, err := sp.reader.ReadString('\n')
 	if err != nil {
-		return r, err
+		return err
 	}
 	fmt.Print("Server> ", txt)
 
 	// Transform to JSON
-	err = json.Unmarshal([]byte(txt), &r)
-	return r, err
+	err = json.Unmarshal([]byte(txt), &resp)
+	return err
 }
