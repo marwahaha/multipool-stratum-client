@@ -16,16 +16,13 @@ type StratumPool struct {
 	idCount        int
 }
 
-// Request sent from client to server
-type Request struct {
-	ID     int    `json:"id"`
-	Method string `json:"method"`
+// RequestInterface is an interface for requests
+type RequestInterface interface {
+	SetID(id int)
 }
 
-// Response received from server
-type Response struct {
-	ID      int    `json:"id"`
-	Version string `json:"jsonrpc"`
+// ResponseInterface is an interface for responses
+type ResponseInterface interface {
 }
 
 // Connect to StratumPool
@@ -38,46 +35,13 @@ func (sp *StratumPool) Connect(addr string, port int) error {
 	}
 	sp.reader = bufio.NewReader(sp.conn)
 
-	// Check version
-	if err := sp.checkVersion(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
-func (sp *StratumPool) checkVersion() error {
-	// Request version
-	p := Request{Method: "version"}
-	if err := sp.send(p); err != nil {
-		return err
-	}
-
-	// Get response
-	resp, err := sp.receive()
-	if err != nil {
-		return err
-	}
-
-	// Process version
-	if resp.Version == "" {
-		sp.jsonRPCVersion = 1.0
-	} else {
-		ver, err := strconv.ParseFloat(resp.Version, 64)
-		if err != nil {
-			return err
-		}
-		sp.jsonRPCVersion = ver
-	}
-
-	fmt.Println("Version detected:", sp.jsonRPCVersion)
-	return nil
-}
-
-func (sp *StratumPool) send(req Request) error {
+func (sp *StratumPool) send(req RequestInterface) error {
 	// Set ID
 	sp.idCount++
-	req.ID = sp.idCount
+	req.SetID(sp.idCount)
 
 	// Transform to text
 	bytes, err := json.Marshal(req)
@@ -93,8 +57,8 @@ func (sp *StratumPool) send(req Request) error {
 	return nil
 }
 
-func (sp *StratumPool) receive() (Response, error) {
-	var r Response
+func (sp *StratumPool) receive() (ResponseInterface, error) {
+	var r ResponseInterface
 
 	// Get response
 	txt, err := sp.reader.ReadString('\n')
